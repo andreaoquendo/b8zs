@@ -6,6 +6,7 @@ Este projeto engloba a interface gráfica, criptografia e codificação do emiss
 
 ## Requisitos para rodar o projeto
 
+Para executar o B8ZS, é necessário ter python e as bibliotecas socket, tkinter e matplotlib.
 
 ## Autores
 Andrea Oquendo e Fernanda Neto
