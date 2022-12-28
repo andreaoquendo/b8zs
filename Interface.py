@@ -94,13 +94,15 @@ class messageWindow:
         signal = self.server.receiveMessage()
 
         # line coding
-        signal = self.crypt.stringToSignal(signal)
+        signal = self.crypt.string_to_signal(signal)
         self.sig = signal
         binary = self.b8.decode(signal)
-        self.crypt.decodeVegenere(binary)
-        self.binaryString = ''.join([str(item) for item in binary])
-        self.vegenere = self.crypt.convertToString()
-        self.message = self.crypt.getDecryptographedMessage()
+
+        # crypto
+        #self.crypt.decodeVegenere(binary)
+        self.binary_string = ''.join([str(item) for item in binary])
+        self.vegenere = self.crypt.binary_to_string(self.binary_string)
+        self.message = self.crypt.get_original_message(self.vegenere)
         
         #interface
         self.updateText()
@@ -112,23 +114,23 @@ class messageWindow:
 
     def sendMessage(self):
         self.message = self.message_input.get()
-        self.crypt.encodeVegenere(self.message)
-        self.vegenere = self.crypt.getCryptographedMessage()
-        binary = self.crypt.convertBinary()
-        self.binaryString = ''.join([str(item) for item in binary])
-        self.sig = self.b8.encode(binary)
+        #self.crypt.encodeVegenere(self.message)
+        self.vegenere = self.crypt.get_encrypted_message(self.message)
+        binary_message = self.crypt.convert_to_binary(self.vegenere)
+        self.binary_string = ''.join([str(item) for item in binary_message])
+        self.sig = self.b8.encode(binary_message)
 
         #interface
         self.updateText()
 
         # connection
-        self.client.sendMessage(self.crypt.signalToString(self.sig))
+        self.client.sendMessage(self.crypt.signal_to_string(self.sig))
 
     def updateText(self):
         if self.fun == 'host':
-             text = f"Signal: { self.sig }\nBinary: { self.binaryString } \nEncrypted Message: { self.vegenere }\nMessage: { self.message } "
+             text = f"Signal: { self.sig }\nBinary: { self.binary_string } \nEncrypted Message: { self.vegenere }\nMessage: { self.message } "
         else:
-            text = f"Message: { self.message } \nEncrypted Message: { self.vegenere }\nBinary: { self.binaryString } \nSignal: { self.sig }"
+            text = f"Message: { self.message } \nEncrypted Message: { self.vegenere }\nBinary: { self.binary_string } \nSignal: { self.sig }"
         self.message_data.delete("1.0","end")
         self.message_data.insert(tk.END, text)
 
