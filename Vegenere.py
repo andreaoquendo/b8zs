@@ -1,3 +1,6 @@
+# Authors:
+# Andrea Alexandra Sánez Oquendo
+# Fernanda Rocha Costa Neto
 import math
 
 class Vegenere:
@@ -98,19 +101,7 @@ class Vegenere:
         encrypted_message = self.binary_to_string(binary_message)
         original_message = self.get_original_message(encrypted_message)
         return original_message
-    
-    ## Transforms the signal's format from list to string, replacing -1's by 2's
-    @staticmethod
-    def signal_to_string(signal):
-        signal = [2 if x==-1 else x for x in signal]
-        signal_string = ''.join([str(item) for item in signal])
-        return signal_string
 
-    ## Transforms the signal's format from string to list, replacing 2's by -1's
-    @staticmethod
-    def string_to_signal(word):
-        letToNum = {'0': 0, '1': 1, '2': -1} 
-        return [letToNum[i] for i in word]
     
     
     

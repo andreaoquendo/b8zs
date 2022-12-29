@@ -94,7 +94,7 @@ class messageWindow:
         signal = self.server.receiveMessage()
 
         # line coding
-        signal = self.crypt.string_to_signal(signal)
+        signal = self.b8.string_to_signal(signal)
         self.sig = signal
         binary = self.b8.decode(signal)
 
@@ -124,7 +124,7 @@ class messageWindow:
         self.updateText()
 
         # connection
-        self.client.sendMessage(self.crypt.signal_to_string(self.sig))
+        self.client.sendMessage(self.b8.signal_to_string(self.sig))
 
     def updateText(self):
         if self.fun == 'host':
