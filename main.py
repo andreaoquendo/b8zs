@@ -1,6 +1,6 @@
-from Interface import selectorWindow
+from Interface import SelectorWindow
 
 if __name__ == "__main__":
-    app = selectorWindow()
+    app = SelectorWindow()
     app.run()
     

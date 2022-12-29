@@ -17,7 +17,7 @@ class Server:
         server_socket.listen(2)
         self.conn, address = server_socket.accept()
 
-    def receiveMessage(self):
+    def receive_message(self):
         while True:
             data = self.conn.recv(1024).decode()
             if data != '':

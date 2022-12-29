@@ -13,27 +13,7 @@ from LineCode import B8ZS
 # Plotting
 import matplotlib.pyplot as plt
 
-class selectorWindow:
-    def createSender(self):
-        ip = self.ip_input.get()
-        port = self.port_input.get()
-    
-        if port and ip:
-            self.client.start(ip, int(port))
-            self.window.destroy()
-            self.host = messageWindow('sender', self.server, self.client)
-            self.host.run()
-    
-    def createHost(self):
-        ip = self.ip_input.get()
-        port = self.port_input.get()
-    
-        if port and ip:
-            self.server.start(ip, int(port))
-            self.window.destroy()
-            self.host = messageWindow('host', self.server, self.client)
-            self.host.run()
-
+class SelectorWindow:
 
     def __init__(self, master=None):
         # Connection
@@ -67,7 +47,7 @@ class selectorWindow:
         self.port.pack(side="top")
         self.port_input = tk.Entry(self.window)
         self.port_input.pack(side="top")
-        self.host = tk.Button(self.window, command=lambda: self.createHost())
+        self.host = tk.Button(self.window, command=lambda: self.create_host())
         self.host.configure(
             background="#b8c0ff",
             compound="none",
@@ -76,7 +56,7 @@ class selectorWindow:
             text='host',
             width=7)
         self.host.pack(side="left")
-        self.client_button = tk.Button(self.window, command=lambda: self.createSender())
+        self.client_button = tk.Button(self.window, command=lambda: self.create_sender())
         self.client_button.configure(background="#b8c0ff", text='client', width=7)
         self.client_button.pack(side="bottom")
 
@@ -86,12 +66,34 @@ class selectorWindow:
 
     def run(self):
         self.mainwindow.mainloop()
+    
+    ## Creates a Sender Interface
+    def create_sender(self):
+        ip = self.ip_input.get()
+        port = self.port_input.get()
+    
+        if port and ip:
+            self.client.start(ip, int(port))
+            self.window.destroy()
+            self.host = MessageWindow('sender', self.server, self.client)
+            self.host.run()
+    
+    ## Creates a Hosdt Interface
+    def create_host(self):
+        ip = self.ip_input.get()
+        port = self.port_input.get()
+    
+        if port and ip:
+            self.server.start(ip, int(port))
+            self.window.destroy()
+            self.host = MessageWindow('host', self.server, self.client)
+            self.host.run()
 
-class messageWindow:
+class MessageWindow:
 
-    def receiveMessage(self):
+    def receive_message(self):
         # connection
-        signal = self.server.receiveMessage()
+        signal = self.server.receive_message()
 
         # line coding
         signal = self.b8.string_to_signal(signal)
@@ -107,14 +109,12 @@ class messageWindow:
         #interface
         self.updateText()
 
+        # graphic
         plt.step(list(range(len(signal))), signal)
-        #plt.show(block=False)
-        #plt.interactive(True)
         plt.show()
 
-    def sendMessage(self):
+    def send_message(self):
         self.message = self.message_input.get()
-        #self.crypt.encodeVegenere(self.message)
         self.vegenere = self.crypt.get_encrypted_message(self.message)
         binary_message = self.crypt.convert_to_binary(self.vegenere)
         self.binary_string = ''.join([str(item) for item in binary_message])
@@ -124,7 +124,7 @@ class messageWindow:
         self.updateText()
 
         # connection
-        self.client.sendMessage(self.b8.signal_to_string(self.sig))
+        self.client.send_message(self.b8.signal_to_string(self.sig))
 
     def updateText(self):
         if self.fun == 'host':
@@ -143,8 +143,6 @@ class messageWindow:
         self.server = server
         self.client = client
 
-        print('ip: ', ip)
-        print('port: ', int(port))
         self.info = ''
         self.fun = fun
 
@@ -173,9 +171,9 @@ class messageWindow:
 
         self.button = tk.Button(self.messageWindow)
         if fun == 'host':      
-            self.button.configure(background="#b8c0ff", text='Receive', command=lambda: self.receiveMessage())
+            self.button.configure(background="#b8c0ff", text='Receive', command=lambda: self.receive_message())
         else:
-            self.button.configure(background="#b8c0ff", text='Send', command=lambda: self.sendMessage())
+            self.button.configure(background="#b8c0ff", text='Send', command=lambda: self.send_message())
         
         self.button.pack(side="top")
 
